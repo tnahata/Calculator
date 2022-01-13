@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import com.example.android.calculator.databinding.ActivityMainBinding
 
@@ -15,24 +16,73 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        // sets the content of the layout for the main activity
         setContentView(binding.root)
 
         val listener = View.OnClickListener { v ->
             val b = v as Button
             if (binding.result.hasFocus()) {
                 binding.result.text.append(b.text)
-            } else {
+            } else if (binding.newNumber.hasFocus()) {
                 binding.newNumber.text.append(b.text)
             }
         }
 
         val operatorListener = View.OnClickListener { v ->
             val op = (v as Button).text.toString()
-            binding.operation.setText(op)
+            if (binding.operation.hasFocus()) {
+                binding.operation.setText(op)
+            }
         }
 
-        binding.button0.setOnClickListener(listener) // add all to functions
+        setNumberButtonListeners(listener)
+
+        setOperatorButtonListeners(operatorListener)
+
+        binding.buttonNeg.setOnClickListener {
+            if (binding.result.hasFocus()) {
+                negativeButtonCode(binding.result)
+            } else if (binding.newNumber.hasFocus()) {
+                negativeButtonCode(binding.newNumber)
+            }
+        }
+
+        try {
+            binding.buttonEquals.setOnClickListener {
+                val firstNumber = binding.result.text.toString().toDouble()
+                val secondNumber = binding.newNumber.text.toString().toDouble()
+                val operator = binding.operation.text.toString()
+                calculateResult(firstNumber, secondNumber, operator)
+            }
+        } catch (e: NumberFormatException) {
+            Toast.makeText(
+                this@MainActivity, "Enter a valid number or operator!", Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun negativeButtonCode(numberField: EditText) {
+        if (numberField.text.isEmpty()) {
+            numberField.setText("-")
+        } else {
+            try {
+                var number = numberField.text.toString().toDouble()
+                number *= -1.0
+                numberField.setText(number.toString())
+            } catch (e: NumberFormatException) {
+                numberField.setText("")
+            }
+        }
+    }
+
+    private fun setOperatorButtonListeners(operatorListener: View.OnClickListener) {
+        binding.buttonPlus.setOnClickListener(operatorListener)
+        binding.buttonMultiply.setOnClickListener(operatorListener)
+        binding.buttonMinus.setOnClickListener(operatorListener)
+        binding.buttonDivide.setOnClickListener(operatorListener)
+    }
+
+    private fun setNumberButtonListeners(listener: View.OnClickListener) {
+        binding.button0.setOnClickListener(listener)
         binding.button1.setOnClickListener(listener)
         binding.button2.setOnClickListener(listener)
         binding.button3.setOnClickListener(listener)
@@ -43,73 +93,35 @@ class MainActivity : AppCompatActivity() {
         binding.button8.setOnClickListener(listener)
         binding.button9.setOnClickListener(listener)
         binding.buttonDot.setOnClickListener(listener)
-
-        binding.buttonPlus.setOnClickListener(operatorListener) // add all to functions
-        binding.buttonMultiply.setOnClickListener(operatorListener)
-        binding.buttonMinus.setOnClickListener(operatorListener)
-        binding.buttonDivide.setOnClickListener(operatorListener)
-
-        binding.buttonNeg.setOnClickListener { // TODO improve this duplicated code
-            if (binding.result.hasFocus()) {
-                if (binding.result.text.isEmpty()) {
-                    binding.result.setText("-")
-                } else {
-                    try {
-                        var number = binding.result.text.toString().toDouble()
-                        number *= -1.0
-                        binding.result.setText(number.toString())
-                    } catch (e: NumberFormatException) {
-                        binding.result.setText("")
-                    }
-                }
-            } else {
-                if (binding.newNumber.text.isEmpty()) {
-                    binding.result.setText("-")
-                } else {
-                    try {
-                        var number = binding.newNumber.text.toString().toDouble()
-                        number *= -1.0
-                        binding.newNumber.setText(number.toString())
-                    } catch (e: NumberFormatException) {
-                        binding.newNumber.setText("")
-                    }
-                }
-            }
-        }
-
-        try {
-            binding.buttonEquals.setOnClickListener {
-                val firstNumber = binding.result.text.toString().toDouble()
-                //Log.d("MainActivity", "$firstNumber")
-                val secondNumber = binding.newNumber.text.toString().toDouble()
-                //Log.d("MainActivity", "$secondNumber")
-                val operator = binding.operation.text.toString()
-                //Log.d("MainActivity", operator)
-                calculateResult(firstNumber, secondNumber, operator)
-            }
-        } catch (e: NumberFormatException) {
-            Toast.makeText(
-                this@MainActivity, "Enter a valid number or operator", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            e.message?.let { Log.d("MainActivity", it) }
-        }
     }
 
-    private fun calculateResult(firstNumber: Double = 0.0, secondNumber: Double = 0.0, operator: String = "") {
-        var result = 0.0
+    private fun calculateResult(firstNumber: Double, secondNumber: Double, operator: String) {
+        val result: Double
         Log.d("MainActivity", "$firstNumber $operator $secondNumber")
-        when(operator) {
+        when (operator) {
             "+" -> result = firstNumber + secondNumber
             "-" -> result = firstNumber - secondNumber
             "*" -> result = firstNumber * secondNumber
             "/" -> {
-                result = if (secondNumber == 0.0) {
-                    Double.NaN
+                if (secondNumber == 0.0) {
+                    Toast.makeText(
+                        this@MainActivity, "Division by zero is not possible", Toast.LENGTH_SHORT
+                    ).show()
+                    binding.result.setText("")
+                    binding.newNumber.setText("")
+                    binding.operation.setText("")
+                    return
                 } else {
-                    firstNumber / secondNumber
+                    result = firstNumber / secondNumber
                 }
             }
-            else -> binding.operation.setText("")
+            else -> {
+                binding.operation.setText("")
+                Toast.makeText(
+                    this@MainActivity, "Please enter a valid operator!", Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
         }
         binding.result.setText(result.toString())
         binding.newNumber.setText("")
