@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             binding.operation.setText(op)
         }
 
-        binding.button0.setOnClickListener(listener)
+        binding.button0.setOnClickListener(listener) // add all to functions
         binding.button1.setOnClickListener(listener)
         binding.button2.setOnClickListener(listener)
         binding.button3.setOnClickListener(listener)
@@ -44,12 +44,12 @@ class MainActivity : AppCompatActivity() {
         binding.button9.setOnClickListener(listener)
         binding.buttonDot.setOnClickListener(listener)
 
-        binding.buttonPlus.setOnClickListener(operatorListener)
+        binding.buttonPlus.setOnClickListener(operatorListener) // add all to functions
         binding.buttonMultiply.setOnClickListener(operatorListener)
         binding.buttonMinus.setOnClickListener(operatorListener)
         binding.buttonDivide.setOnClickListener(operatorListener)
 
-        binding.buttonNeg.setOnClickListener { // improve this duplicated code
+        binding.buttonNeg.setOnClickListener { // TODO improve this duplicated code
             if (binding.result.hasFocus()) {
                 if (binding.result.text.isEmpty()) {
                     binding.result.setText("-")
@@ -78,13 +78,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         try {
-            val firstNumber = binding.result.text.toString().toDouble()
-            //Log.d("MainActivity", "$firstNumber")
-            val secondNumber = binding.newNumber.text.toString().toDouble()
-            //Log.d("MainActivity", "$secondNumber")
-            val operator = binding.operation.text.toString()
-            //Log.d("MainActivity", operator)
             binding.buttonEquals.setOnClickListener {
+                val firstNumber = binding.result.text.toString().toDouble()
+                //Log.d("MainActivity", "$firstNumber")
+                val secondNumber = binding.newNumber.text.toString().toDouble()
+                //Log.d("MainActivity", "$secondNumber")
+                val operator = binding.operation.text.toString()
+                //Log.d("MainActivity", operator)
                 calculateResult(firstNumber, secondNumber, operator)
             }
         } catch (e: NumberFormatException) {
