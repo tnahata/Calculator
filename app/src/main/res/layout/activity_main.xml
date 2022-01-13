@@ -38,7 +38,8 @@
         android:layout_marginEnd="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@id/newNumber"
+        app:layout_constraintTop_toTopOf="@id/result"
+        app:layout_constraintBottom_toBottomOf="@id/newNumber"
         app:layout_constraintEnd_toStartOf="@+id/newNumber"
         app:layout_constraintStart_toStartOf="parent"
         android:maxLength="1"/>

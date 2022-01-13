@@ -2,7 +2,6 @@ package com.example.android.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -20,18 +19,16 @@ class MainActivity : AppCompatActivity() {
 
         val listener = View.OnClickListener { v ->
             val b = v as Button
-            if (binding.result.hasFocus()) {
-                binding.result.text.append(b.text)
-            } else if (binding.newNumber.hasFocus()) {
-                binding.newNumber.text.append(b.text)
-            }
+            if (binding.result.hasFocus())
+                numberListenerCode(binding.result, b)
+            else if (binding.newNumber.hasFocus())
+                numberListenerCode(binding.newNumber, b)
         }
 
         val operatorListener = View.OnClickListener { v ->
             val op = (v as Button).text.toString()
-            if (binding.operation.hasFocus()) {
+            if (binding.operation.hasFocus())
                 binding.operation.setText(op)
-            }
         }
 
         setNumberButtonListeners(listener)
@@ -39,24 +36,35 @@ class MainActivity : AppCompatActivity() {
         setOperatorButtonListeners(operatorListener)
 
         binding.buttonNeg.setOnClickListener {
-            if (binding.result.hasFocus()) {
+            if (binding.result.hasFocus())
                 negativeButtonCode(binding.result)
-            } else if (binding.newNumber.hasFocus()) {
+            else if (binding.newNumber.hasFocus())
                 negativeButtonCode(binding.newNumber)
-            }
         }
 
-        try {
-            binding.buttonEquals.setOnClickListener {
+        binding.buttonEquals.setOnClickListener {
+            try {
                 val firstNumber = binding.result.text.toString().toDouble()
                 val secondNumber = binding.newNumber.text.toString().toDouble()
                 val operator = binding.operation.text.toString()
                 calculateResult(firstNumber, secondNumber, operator)
+            } catch (e: NumberFormatException) {
+                Toast.makeText(
+                    this@MainActivity, "Enter a valid number!", Toast.LENGTH_SHORT
+                ).show()
             }
-        } catch (e: NumberFormatException) {
-            Toast.makeText(
-                this@MainActivity, "Enter a valid number or operator!", Toast.LENGTH_SHORT
-            ).show()
+        }
+    }
+
+    private fun numberListenerCode(numberField: EditText, button: Button) {
+        if (numberField.text.isEmpty()) {
+            if (button.text == ".") {
+                numberField.setText("0.")
+            } else {
+                numberField.text.append(button.text)
+            }
+        } else {
+            numberField.text.append(button.text)
         }
     }
 
@@ -97,7 +105,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun calculateResult(firstNumber: Double, secondNumber: Double, operator: String) {
         val result: Double
-        Log.d("MainActivity", "$firstNumber $operator $secondNumber")
         when (operator) {
             "+" -> result = firstNumber + secondNumber
             "-" -> result = firstNumber - secondNumber

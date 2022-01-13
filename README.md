@@ -10,9 +10,9 @@ Time spent: **X** hours spent in total
 
 The **calculator** has the following functionality:
 
-* [ ] User can enter negative and decimal point numbers
-* [ ] User can add, subtract, multiply, and divide.
-* [ ] This app uses live data and data binding
+* [x] User can enter negative and decimal point numbers
+* [x] User can add, subtract, multiply, and divide.
+* [x] The app uses view binding
 
 ## Video Walkthrough
 
