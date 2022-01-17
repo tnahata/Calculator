@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         val operatorListener = View.OnClickListener { v ->
             val op = (v as Button).text.toString()
-            if (binding.operation.hasFocus())
-                binding.operation.setText(op)
+            binding.operation.setText(op)
         }
 
         setButtonListeners(listener, operatorListener)
@@ -57,6 +56,13 @@ class MainActivity : AppCompatActivity() {
                     binding.operation.setText("")
                 }
             }
+        }
+
+        binding.buttonAllClear.setOnClickListener {
+            if (binding.result.hasFocus())
+                binding.result.setText("")
+            else if (binding.newNumber.hasFocus())
+                binding.newNumber.setText("")
         }
 
         binding.buttonEquals.setOnClickListener {

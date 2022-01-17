@@ -4,7 +4,7 @@
 
 **Calculator** A simple calculator app that performs addition, subtraction, multiplication and division. 
 
-Time spent: **X** hours spent in total
+Time spent: **10** hours spent in total
 
 ## Functionality
 
