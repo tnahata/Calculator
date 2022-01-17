@@ -14,7 +14,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="@string/enter_number"
         android:inputType="numberSigned|numberDecimal"
+        android:textIsSelectable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="@string/enter_number"
         android:inputType="numberSigned|numberDecimal"
+        android:textIsSelectable="true"
         app:layout_constraintEnd_toEndOf="@+id/result"
         app:layout_constraintStart_toStartOf="@+id/result"
         app:layout_constraintTop_toBottomOf="@+id/result" />
@@ -36,13 +40,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:maxLength="1"
+        android:textIsSelectable="true"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="@id/result"
         app:layout_constraintBottom_toBottomOf="@id/newNumber"
         app:layout_constraintEnd_toStartOf="@+id/newNumber"
         app:layout_constraintStart_toStartOf="parent"
-        android:maxLength="1"/>
+        app:layout_constraintTop_toTopOf="@id/result" />
 
     <Button
         android:id="@+id/button0"
@@ -201,9 +206,17 @@
         android:layout_marginTop="4dp"
         android:minWidth="46.5dp"
         android:text="Neg"
-        app:layout_constraintEnd_toEndOf="@+id/buttonEquals"
-        app:layout_constraintStart_toStartOf="@+id/buttonDot"
+        app:layout_constraintStart_toStartOf="@+id/button0"
         app:layout_constraintTop_toBottomOf="@+id/buttonDot" />
+
+    <Button
+        android:id="@+id/buttonClr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="46.5dp"
+        android:text="Clr"
+        app:layout_constraintBaseline_toBaselineOf="@id/buttonNeg"
+        app:layout_constraintEnd_toEndOf="@id/buttonPlus" />
 
     <Button
         android:id="@+id/buttonEquals"

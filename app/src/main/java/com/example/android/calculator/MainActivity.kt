@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        hideKeyboard()
+
         val listener = View.OnClickListener { v ->
             val b = v as Button
             if (binding.result.hasFocus())
@@ -31,15 +33,30 @@ class MainActivity : AppCompatActivity() {
                 binding.operation.setText(op)
         }
 
-        setNumberButtonListeners(listener)
-
-        setOperatorButtonListeners(operatorListener)
+        setButtonListeners(listener, operatorListener)
 
         binding.buttonNeg.setOnClickListener {
             if (binding.result.hasFocus())
                 negativeButtonCode(binding.result)
             else if (binding.newNumber.hasFocus())
                 negativeButtonCode(binding.newNumber)
+        }
+
+        binding.buttonClr.setOnClickListener {
+            val num: String
+            when {
+                binding.newNumber.hasFocus() -> {
+                    num = binding.newNumber.text.toString()
+                    binding.newNumber.setText(num.dropLast(1))
+                }
+                binding.result.hasFocus() -> {
+                    num = binding.result.text.toString()
+                    binding.result.setText(num.dropLast(1))
+                }
+                binding.operation.hasFocus() -> {
+                    binding.operation.setText("")
+                }
+            }
         }
 
         binding.buttonEquals.setOnClickListener {
@@ -54,6 +71,12 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    private fun hideKeyboard() {
+        binding.result.showSoftInputOnFocus = false
+        binding.newNumber.showSoftInputOnFocus = false
+        binding.operation.showSoftInputOnFocus = false
     }
 
     private fun numberListenerCode(numberField: EditText, button: Button) {
@@ -82,25 +105,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setOperatorButtonListeners(operatorListener: View.OnClickListener) {
-        binding.buttonPlus.setOnClickListener(operatorListener)
-        binding.buttonMultiply.setOnClickListener(operatorListener)
-        binding.buttonMinus.setOnClickListener(operatorListener)
-        binding.buttonDivide.setOnClickListener(operatorListener)
-    }
-
-    private fun setNumberButtonListeners(listener: View.OnClickListener) {
-        binding.button0.setOnClickListener(listener)
-        binding.button1.setOnClickListener(listener)
-        binding.button2.setOnClickListener(listener)
-        binding.button3.setOnClickListener(listener)
-        binding.button4.setOnClickListener(listener)
-        binding.button5.setOnClickListener(listener)
-        binding.button6.setOnClickListener(listener)
-        binding.button7.setOnClickListener(listener)
-        binding.button8.setOnClickListener(listener)
-        binding.button9.setOnClickListener(listener)
-        binding.buttonDot.setOnClickListener(listener)
+    private fun setButtonListeners(listener: View.OnClickListener, operatorListener: View.OnClickListener) {
+        binding.apply {
+            button0.setOnClickListener(listener)
+            button1.setOnClickListener(listener)
+            button2.setOnClickListener(listener)
+            button3.setOnClickListener(listener)
+            button4.setOnClickListener(listener)
+            button5.setOnClickListener(listener)
+            button6.setOnClickListener(listener)
+            button7.setOnClickListener(listener)
+            button8.setOnClickListener(listener)
+            button9.setOnClickListener(listener)
+            buttonDot.setOnClickListener(listener)
+            buttonPlus.setOnClickListener(operatorListener)
+            buttonMinus.setOnClickListener(operatorListener)
+            buttonDivide.setOnClickListener(operatorListener)
+            buttonMultiply.setOnClickListener(operatorListener)
+        }
     }
 
     private fun calculateResult(firstNumber: Double, secondNumber: Double, operator: String) {
