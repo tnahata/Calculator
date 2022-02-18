@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.example.android.calculator.databinding.ActivityMainBinding
+import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
 
@@ -67,8 +68,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttonEquals.setOnClickListener {
             try {
-                val firstNumber = binding.result.text.toString().toDouble()
-                val secondNumber = binding.newNumber.text.toString().toDouble()
+                val firstNumber = binding.result.text.toString()
+                val secondNumber = binding.newNumber.text.toString()
                 val operator = binding.operation.text.toString()
                 calculateResult(firstNumber, secondNumber, operator)
             } catch (e: NumberFormatException) {
@@ -131,14 +132,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun calculateResult(firstNumber: Double, secondNumber: Double, operator: String) {
-        val result: Double
+    private fun calculateResult(firstNumber: String, secondNumber: String, operator: String) {
+        val first = BigDecimal(firstNumber)
+        val second = BigDecimal(secondNumber)
+        val result: BigDecimal
         when (operator) {
-            "+" -> result = firstNumber + secondNumber
-            "-" -> result = firstNumber - secondNumber
-            "*" -> result = firstNumber * secondNumber
+            "+" -> result = first.plus(second)
+            "-" -> result = first.minus(second)
+            "*" -> result = first * second
             "/" -> {
-                if (secondNumber == 0.0) {
+                if (second == (0).toBigDecimal()) {
                     Toast.makeText(
                         this@MainActivity, "Division by zero is not possible", Toast.LENGTH_SHORT
                     ).show()
@@ -147,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                     binding.operation.setText("")
                     return
                 } else {
-                    result = firstNumber / secondNumber
+                    result = first.divide(second)
                 }
             }
             else -> {
