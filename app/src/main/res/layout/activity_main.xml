@@ -44,6 +44,7 @@
         android:textIsSelectable="true"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="@id/newNumber"
         app:layout_constraintEnd_toStartOf="@+id/newNumber"
         app:layout_constraintStart_toStartOf="parent"
